@@ -1,6 +1,7 @@
 package teamFRS.FoodRoadSook.member;
 
 import org.springframework.stereotype.Service;
+import teamFRS.FoodRoadSook.exception.NotFoundException;
 
 import javax.transaction.Transactional;
 import java.util.HashMap;
@@ -19,13 +20,15 @@ public interface MemberService {
     //Entity를 넘겨줄까 생각중
     //MemberDTO member_login(?/);
 
-    //아이디(이메일) 중복 확인
-    boolean member_id_check(String id);
 
     //마이페이지에서 회원 정보 변경 저장
     boolean member_update(Long id, MemberDTO memberDTO);
 
     //회원 정보 탈퇴
-    boolean member_delete(String id);
+    boolean member_delete(String user_id);
+
+    void sendVerificationMail(String user_id) throws NotFoundException;
+
+    void verifyEmail(String key) throws NotFoundException;
 
 }

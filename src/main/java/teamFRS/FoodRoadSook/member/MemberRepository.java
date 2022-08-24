@@ -14,5 +14,6 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Integer> {
     Optional<MemberEntity> findByUserid(String user_id);
     Optional<MemberEntity> findByUsername(String user_name);
     List<MemberEntity> findAll();
+    void deleteByUserid(String user_id);
 
 }

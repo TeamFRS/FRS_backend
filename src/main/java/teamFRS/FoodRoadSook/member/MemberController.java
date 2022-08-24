@@ -1,24 +1,22 @@
 package teamFRS.FoodRoadSook.member;
-import java.util.HashMap;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-//import teamFRS.FoodRoadSook.EmailAuth.MailSendService;
+import teamFRS.FoodRoadSook.emailauth.Response;
 
 @Controller
 @RestController
 @RequestMapping(value = "api/member")
 public class MemberController {
     private final MemberService memberService;
-
     @Autowired
     public MemberController(MemberService memberService){
+
         this.memberService = memberService;
+
     }
 
     /**
@@ -39,10 +37,37 @@ public class MemberController {
     //@RequestBody 어노테이션을 적어줘야 MemberDTO객체를 정상적으로 클라이언트에서 가져옴. @RequestBody 누락시 모든 값이 null이 들어가는 에러 발생.
     @PostMapping("/register")
     public String register(@RequestBody MemberDTO memberDTO) {
-
+        // DB에 기본정보 insert
         return memberService.member_insert(memberDTO);
+    }
 
+    /**
+     * 이메일(user_id) 인증
+     * @return String 이메일 인증 여부
+     */
+    @PostMapping("/verify/{user_id}")
+    public Response verify(@PathVariable("user_id") String user_id) {
+        Response response;
+        try {
+            memberService.sendVerificationMail(user_id);
+            response = new Response("success", "성공적으로 인증메일을 보냈습니다.", null);
+        } catch (Exception exception) {
+            response = new Response("error", "인증메일을 보내는데 문제가 발생했습니다.",exception);
+        }
+        return response;
+    }
 
+    @GetMapping("/verify/{key}")
+    public Response getVerify(@PathVariable String key) {
+        Response response;
+        try {
+            memberService.verifyEmail(key);
+            response = new Response("success", "성공적으로 인증메일을 확인했습니다.", null);
+
+        } catch (Exception e) {
+            response = new Response("error", "인증메일을 확인하는데 실패했습니다.", null);
+        }
+        return response;
     }
 
 

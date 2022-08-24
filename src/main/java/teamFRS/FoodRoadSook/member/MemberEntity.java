@@ -1,6 +1,8 @@
 package teamFRS.FoodRoadSook.member;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -9,6 +11,7 @@ import java.sql.Timestamp;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicInsert
 @Builder
 @Table(name = "member") //DB 테이블명 작성
 public class MemberEntity {
@@ -33,8 +36,8 @@ public class MemberEntity {
     @Column(nullable = false,name = "user_sm")
     Boolean usersm;//무조건 숙대생으로 하기로 했으므로 필요없는 필드. 차후에 협의 후 지우기.
     //이메일 인증 여부를 위한 토큰으로 아직 사용 X
-    @Column(nullable = false,name = "emailToken_authentication")
-    boolean emailToken_authentication;
+    @Column(nullable = false, name = "email_auth")
+    Boolean emailAuth;
 
     Timestamp regdate;
 
@@ -52,9 +55,13 @@ public class MemberEntity {
                 .user_sm(usersm)
                 .regdate(regdate)
                 .updatedate(updatedate)
-                .emailToken_authentication(emailToken_authentication)
+                .emailAuth(emailAuth)
                 .build();
 
+    }
+    //계정 인증 완료
+    public void emailVerified(){
+        this.emailAuth = true;
     }
 
 
