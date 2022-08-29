@@ -1,7 +1,6 @@
 package teamFRS.FoodRoadSook.member;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
@@ -33,15 +32,12 @@ public class MemberEntity {
     String userimage;
     @Column(nullable = false,name = "user_grade")
     int usergrade;
-    @Column(nullable = false,name = "user_sm")
-    Boolean usersm;//무조건 숙대생으로 하기로 했으므로 필요없는 필드. 차후에 협의 후 지우기.
+    //무조건 숙대생으로 하기로 했으므로 필요없는 필드. user_sm 필드는 지움
+
     //이메일 인증 여부를 위한 토큰으로 아직 사용 X
     @Column(nullable = false, name = "email_auth")
     Boolean emailAuth;
 
-    Timestamp regdate;
-
-    Timestamp updatedate;
     //  Entity -> DTO
     public MemberDTO toDTO(){
         return MemberDTO.builder()
@@ -52,9 +48,6 @@ public class MemberEntity {
                 .user_store(userstore)
                 .user_image(userimage)
                 .user_grade(usergrade)
-                .user_sm(usersm)
-                .regdate(regdate)
-                .updatedate(updatedate)
                 .emailAuth(emailAuth)
                 .build();
 

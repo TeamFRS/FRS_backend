@@ -3,7 +3,6 @@ package teamFRS.FoodRoadSook.member;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
-import java.awt.*;
 import java.sql.Timestamp;
 
 @Getter
@@ -33,11 +32,7 @@ public class MemberDTO {
     @NonNull
     @NotBlank
     private int user_grade;
-    @NonNull
-    @NotBlank
-    private Boolean user_sm;//무조건 숙대생으로 하기로 했으므로 필요없는 필드일 수 있음.
-    private Timestamp regdate;
-    private Timestamp updatedate;
+
     //이메일 인증 여부를 위한 토큰으로 아직 사용 X
     Boolean emailAuth;
 
@@ -68,9 +63,6 @@ public class MemberDTO {
                 .userstore(user_store)
                 .userimage(user_image)
                 .usergrade(user_grade)
-                .usersm(user_sm)
-                .regdate(regdate)
-                .updatedate(updatedate)
                 .emailAuth(emailAuth)
                 .build();
 

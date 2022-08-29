@@ -10,8 +10,12 @@ import java.time.Duration;
 @Service
 public class RedisUtil {
 
-    @Autowired
+
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    public RedisUtil(StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
 
     public String getData(String key){
         ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();

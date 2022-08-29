@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import teamFRS.FoodRoadSook.emailauth.EmailService;
+import teamFRS.FoodRoadSook.emailauth.KeyVO;
 import teamFRS.FoodRoadSook.emailauth.RedisUtil;
 import teamFRS.FoodRoadSook.exception.NotFoundException;
 
@@ -98,7 +99,7 @@ public class MemberServiceImpl implements MemberService {
         Optional<MemberEntity> member =memberRepository.findByUserid(user_id);
         if (member.isEmpty()) throw new NotFoundException("멤버엔티티가 조회되지 않음");
         UUID uuid = UUID.randomUUID();
-        redisUtil.setDataExpire(uuid.toString(), user_id, 60 * 30L);
+        redisUtil.setDataExpire(uuid.toString(), user_id, 60 * 30L);//만료기한 30분
         emailService.send(user_id, VERIFICATION_LINK + uuid.toString());
     }
     /**
