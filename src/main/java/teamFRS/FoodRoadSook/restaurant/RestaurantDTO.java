@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @Data
 public class RestaurantDTO {
-
+    private int id;
     @NonNull
     @NotBlank
     private String res_name;
@@ -44,6 +44,7 @@ public class RestaurantDTO {
     //  DTO -> Entity
     public RestaurantEntity toEntity() {
         return RestaurantEntity.builder()
+                .id(id)
                 .resname(res_name)
                 .restime(res_time)
                 .resdelivery(res_delivery)

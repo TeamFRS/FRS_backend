@@ -2,9 +2,12 @@ package teamFRS.FoodRoadSook.member;
 
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
+import teamFRS.FoodRoadSook.review.ReviewEntity;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -17,7 +20,7 @@ public class MemberEntity {
 //정수형을 Integer로 해줘야하는지 int로 해줘야하는지 잘 모르겠음.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//MySQL의 AUTO_INCREMENT를 사용함을 명시
-    Long id;
+    int id;
     @Column(nullable = false, name = "user_id")
     String userid;
     @Column(nullable = false ,name = "user_pw")
@@ -38,6 +41,17 @@ public class MemberEntity {
     @Column(nullable = false, name = "email_auth")
     Boolean emailAuth;
 
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewEntity> reviews = new ArrayList<ReviewEntity>();
+
+
+    public void addReview(ReviewEntity review){
+        this.reviews.add(review);
+        // 이부분이 없으면 무한 루프에 걸린다.
+        if (review.getMember() != this) {
+            review.setMember(this);
+        }
+    }
     //  Entity -> DTO
     public MemberDTO toDTO(){
         return MemberDTO.builder()

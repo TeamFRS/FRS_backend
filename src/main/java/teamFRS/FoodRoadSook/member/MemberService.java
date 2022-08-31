@@ -1,10 +1,7 @@
 package teamFRS.FoodRoadSook.member;
 
-import org.springframework.stereotype.Service;
-import teamFRS.FoodRoadSook.exception.NotFoundException;
 
-import javax.transaction.Transactional;
-import java.util.HashMap;
+import teamFRS.FoodRoadSook.exception.NotFoundException;
 
 
 public interface MemberService {
@@ -22,7 +19,7 @@ public interface MemberService {
 
 
     //마이페이지에서 회원 정보 변경 저장
-    boolean member_update(Long id, MemberDTO memberDTO);
+    boolean member_update(int id, MemberDTO memberDTO);
 
     //회원 정보 탈퇴
     boolean member_delete(String user_id);

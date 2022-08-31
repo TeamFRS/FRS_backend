@@ -5,8 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
+import teamFRS.FoodRoadSook.menu.MenuEntity;
+import teamFRS.FoodRoadSook.review.ReviewEntity;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,7 +23,7 @@ import java.time.LocalDateTime;
 public class RestaurantEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//MySQL의 AUTO_INCREMENT를 사용함을 명
-    Long id;
+    int id;
     @Column(nullable = false, name = "res_name")
     String resname;
     @Column(nullable = false ,name = "res_time")
@@ -40,6 +45,28 @@ public class RestaurantEntity {
     @Column(nullable = false, name = "res_info")
     String resinfo; //이거 enum 처리할지 고민중
 
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewEntity> reviews = new ArrayList<ReviewEntity>();
+
+
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MenuEntity> menus= new ArrayList<MenuEntity>();
+
+
+    public void addReview(ReviewEntity review){
+        this.reviews.add(review);
+        // 이부분이 없으면 무한 루프에 걸린다.
+        if (review.getRestaurant() != this) {
+            review.setRestaurant(this);
+        }
+    }
+    public void addMenu(MenuEntity menu){
+        this.menus.add(menu);
+        // 이부분이 없으면 무한 루프에 걸린다.
+        if (menu.getRestaurant() != this) {
+            menu.setRestaurant(this);
+        }
+    }
     //  Entity -> DTO
     public RestaurantDTO toDTO(){
         return RestaurantDTO.builder()

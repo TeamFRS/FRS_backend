@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import teamFRS.FoodRoadSook.emailauth.EmailService;
-import teamFRS.FoodRoadSook.emailauth.KeyVO;
 import teamFRS.FoodRoadSook.emailauth.RedisUtil;
 import teamFRS.FoodRoadSook.exception.NotFoundException;
 
@@ -75,7 +74,7 @@ public class MemberServiceImpl implements MemberService {
      * @return
      */
     @Override
-    public boolean member_update(Long id, MemberDTO memberDTO) {
+    public boolean member_update(int id, MemberDTO memberDTO) {
         //member_insert 구현한것 처럼 DTO 를 Entity로 바꾸어 구현.
         return false;
     }
@@ -87,7 +86,7 @@ public class MemberServiceImpl implements MemberService {
     public boolean member_delete(String user_id) {
         // user_id로 조회해서 해당 객체 삭제
         memberRepository.deleteByUserid(user_id);
-        return false;
+        return true;
     }
     /**
      * 인증 이메일 보내기

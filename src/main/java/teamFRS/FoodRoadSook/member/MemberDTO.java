@@ -1,9 +1,7 @@
 package teamFRS.FoodRoadSook.member;
 
 import lombok.*;
-
 import javax.validation.constraints.NotBlank;
-import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -15,6 +13,7 @@ import java.sql.Timestamp;
 /* 회원 서비스 요청 RequestDTO 클래스 */
 public class MemberDTO {
     //아이디(이메일), 비밀번호, 주소, 닉네임, 찜한 가게, 학생증, 신뢰도, 숙명여대/주민[0,1]
+    int id;
     @NonNull
     @NotBlank
     private String user_id;
@@ -56,6 +55,7 @@ public class MemberDTO {
 //  DTO -> Entity
     public MemberEntity toEntity(){
         return MemberEntity.builder()
+                .id(id)
                 .userid(user_id)
                 .userpw(user_pw)
                 .useraddress(user_address)
