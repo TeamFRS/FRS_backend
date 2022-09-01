@@ -7,21 +7,21 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-@Configuration
-public class RedisConfig {
-
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory();
-        return lettuceConnectionFactory;
-    }
-    @Bean
-    public StringRedisTemplate redisTemplate() {
-        StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory());
-        // explicitly enable transaction support
-        template.setEnableTransactionSupport(true);
-        return template;
-    }
-
-}
+//
+//@Configuration
+//public class RedisConfig {
+//
+//    @Bean
+//    public RedisConnectionFactory redisConnectionFactory() {
+//        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory();
+//        return lettuceConnectionFactory;
+//    }
+//    @Bean
+//    public StringRedisTemplate redisTemplate() {
+//        StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory());
+//        // explicitly enable transaction support
+//        template.setEnableTransactionSupport(true);
+//        return template;
+//    }
+//
+//}
