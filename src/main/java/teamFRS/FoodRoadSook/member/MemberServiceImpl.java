@@ -105,30 +105,32 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.deleteByUserid(user_id);
         return true;
     }
-                 /**
-                  * 인증 이메일 보내기
-                  * @return
-                  */
-                 @Override
-                 public void sendVerificationMail (String user_id) throws NotFoundException {
-                     String VERIFICATION_LINK = "http://localhost:8080/member/verify/";
-                     Optional<MemberEntity> member = memberRepository.findByUserid(user_id);
-                     if (member.isEmpty()) throw new NotFoundException("멤버엔티티가 조회되지 않음");
-                     UUID uuid = UUID.randomUUID();
-                     redisUtil.setDataExpire(uuid.toString(), user_id, 60 * 30L);//만료기한 30분
-                     emailService.send(user_id, VERIFICATION_LINK + uuid.toString());
-                 }
-                 /**
-                  * 유저아이디 인증
-                  * @return
-                  */
-                 @Override
-                 public void verifyEmail (String key) throws NotFoundException {
-                     String user_id = redisUtil.getData(key);
-                     Optional<MemberEntity> member = memberRepository.findByUserid(user_id);
-                     if (member.isEmpty()) throw new NotFoundException("멤버엔티티가 조회되지않음");
-                     member.get().emailVerified();
-                     redisUtil.deleteData(key);
-                 }
 
-             }
+    /**
+     * 인증 이메일 보내기
+     * @return
+     */
+    @Override
+    public void sendVerificationMail(String user_id) throws NotFoundException {
+        String VERIFICATION_LINK = "http://localhost:8080/member/verify/";
+        Optional<MemberEntity> member =memberRepository.findByUserid(user_id);
+        if (member.isEmpty()) throw new NotFoundException("멤버엔티티가 조회되지 않음");
+        UUID uuid = UUID.randomUUID();
+        redisUtil.setDataExpire(uuid.toString(), user_id, 60 * 30L);//만료기한 30분
+        emailService.send(user_id, VERIFICATION_LINK + uuid.toString());
+    }
+    /**
+     * 유저아이디 인증
+     * @return
+     */
+    @Override
+    public void verifyEmail(String key) throws NotFoundException {
+        String user_id = redisUtil.getData(key);
+        Optional<MemberEntity> member = memberRepository.findByUserid(user_id);
+        if (member.isEmpty()) throw new NotFoundException("멤버엔티티가 조회되지않음");
+        member.get().emailVerified();
+        redisUtil.deleteData(key);
+    }
+
+}
+
