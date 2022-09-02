@@ -79,6 +79,7 @@ public class MemberDTO {
     public String getUser_store() {
         return user_store;
     }
+    public String getUser_pw(){return user_pw;}
     public void setUser_store(String user_store) {
         this.user_store = user_store;
     }

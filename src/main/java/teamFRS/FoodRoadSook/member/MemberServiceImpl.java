@@ -33,16 +33,16 @@ public class MemberServiceImpl implements MemberService {
 
     /**
      * 회원 정보 DB에 추가
+     *
      * @return
      */
     @Override
     public String member_insert(MemberDTO memberDTO) {
         //1.해당 user_id가 존재하는지 체크
-        Optional<MemberEntity> member =memberRepository.findByUserid(memberDTO.getUser_id());
-        if(member.isPresent()) {
+        Optional<MemberEntity> member = memberRepository.findByUserid(memberDTO.getUser_id());
+        if (member.isPresent()) {
             return "이미존재하는 회원입니다.";
-        }
-        else{
+        } else {
             MemberEntity memberEntity = memberDTO.toEntity();
             memberRepository.save(memberEntity);
             return "회원가입 성공";
@@ -52,22 +52,39 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO member_select(String user_id) {
         //1.해당 user_id가 존재하는지 체크
-        Optional<MemberEntity> member =memberRepository.findByUserid(user_id);
-            return member.get().toDTO();
+        Optional<MemberEntity> member = memberRepository.findByUserid(user_id);
+        return member.get().toDTO();
 
     }
-
 
 
     /**
      * 로그인 -미구현
      * @return
      */
-//    @Override
-//    public MemberDTO member_login() {
-//
-//    }
+    @Override
+    public String  member_login(Logindata logindata) {
+        Optional<MemberEntity> member = memberRepository.findByUserid(logindata.getId()); //1.해당 user_id가 존재하는지 체크
+        if (member.isEmpty()) {
+            return "존재하지 않는 회원입니다";
+        }
+        else {//비밀번호 일치하는지 확인
+            String password = member.get().toDTO().getUser_pw();
+            if (logindata.getPw().equals(password)) {
+                return " 로그인에 성공하셨습니다.";
+                //맞는다면 세션유지
+            }
+            else{
+                return "비밀번호가 틀렸습니다";
+            }
+        }
+    }
 
+
+//
+//
+//
+//
 
     /**
      * 회원 정보 업데이트 -미구현
@@ -88,6 +105,7 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.deleteByUserid(user_id);
         return true;
     }
+
     /**
      * 인증 이메일 보내기
      * @return
@@ -115,3 +133,4 @@ public class MemberServiceImpl implements MemberService {
     }
 
 }
+

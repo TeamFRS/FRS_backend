@@ -77,14 +77,14 @@ public class MemberController {
      * 로그인
      * @return
      */
-//    @ResponseBody @RequestMapping("/login")
-//    public String login(String user_id, String user_pw, HttpSession session) {
-//        //화면에서 입력한 아이디와 비밀번호가 일치하는 회원 정보가 DB에 있는지 확인하여
-//
-//
-//        //일치하는 회원 정보가 있다면 회원 정보를 세션에 담는다
-//
-//    }
+    @PostMapping("/login")
+    public String login(@RequestBody Logindata logindata) {
+        //화면에서 입력한 아이디와 비밀번호가 일치하는 회원 정보가 DB에 있는지 확인하여
+        return memberService.member_login(logindata);
+
+        //일치하는 회원 정보가 있다면 회원 정보를 세션에 담는다
+
+    }
 
     /**
      * 로그아웃

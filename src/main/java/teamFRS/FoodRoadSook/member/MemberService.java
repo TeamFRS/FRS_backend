@@ -15,7 +15,7 @@ public interface MemberService {
 
     //로그인  <<미구현
     //Entity를 넘겨줄까 생각중
-    //MemberDTO member_login(?/);
+    String member_login(Logindata logindata);
 
 
     //마이페이지에서 회원 정보 변경 저장
