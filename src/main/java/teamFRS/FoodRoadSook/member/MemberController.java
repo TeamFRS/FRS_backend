@@ -1,10 +1,10 @@
 package teamFRS.FoodRoadSook.member;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import teamFRS.FoodRoadSook.emailauth.KeyVO;
 import teamFRS.FoodRoadSook.emailauth.Response;
 
 @Controller
@@ -45,8 +45,9 @@ public class MemberController {
      * 이메일(user_id) 인증
      * @return String 이메일 인증 여부
      */
-    @PostMapping("/verify/{user_id}")
-    public Response verify(@PathVariable("user_id") String user_id) {
+    //http://localhost:8080/api/member/send-verify/
+    @GetMapping("/send-verify/{user_id}")
+    public Response sendmail(@PathVariable("user_id") String user_id) {
         Response response;
         try {
             memberService.sendVerificationMail(user_id);
@@ -56,12 +57,12 @@ public class MemberController {
         }
         return response;
     }
-
-    @GetMapping("/verify/{key}")
-    public Response getVerify(@PathVariable String key) {
+    //http://localhost:8080/api/member/verify
+    @PostMapping("/verify")//프론트에서 Json형태로 받으므로 KeyVO 객체로 맵핑시켜받은 후 필드로 처리
+    public Response verify(@RequestBody KeyVO keyVO) {
         Response response;
         try {
-            memberService.verifyEmail(key);
+            memberService.verifyEmail(keyVO.getKey());
             response = new Response("success", "성공적으로 인증메일을 확인했습니다.", null);
 
         } catch (Exception e) {
@@ -76,14 +77,14 @@ public class MemberController {
      * 로그인
      * @return
      */
-//    @ResponseBody @RequestMapping("/login")
-//    public String login(String user_id, String user_pw, HttpSession session) {
-//        //화면에서 입력한 아이디와 비밀번호가 일치하는 회원 정보가 DB에 있는지 확인하여
-//
-//
-//        //일치하는 회원 정보가 있다면 회원 정보를 세션에 담는다
-//
-//    }
+    @PostMapping("/login")
+    public String login(@RequestBody Logindata logindata) {
+        //화면에서 입력한 아이디와 비밀번호가 일치하는 회원 정보가 DB에 있는지 확인하여
+        return memberService.member_login(logindata);
+
+        //일치하는 회원 정보가 있다면 회원 정보를 세션에 담는다
+
+    }
 
     /**
      * 로그아웃

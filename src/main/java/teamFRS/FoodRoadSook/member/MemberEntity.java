@@ -1,11 +1,13 @@
 package teamFRS.FoodRoadSook.member;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import teamFRS.FoodRoadSook.review.ReviewEntity;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -18,7 +20,7 @@ public class MemberEntity {
 //정수형을 Integer로 해줘야하는지 int로 해줘야하는지 잘 모르겠음.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//MySQL의 AUTO_INCREMENT를 사용함을 명시
-    Long id;
+    int id;
     @Column(nullable = false, name = "user_id")
     String userid;
     @Column(nullable = false ,name = "user_pw")
@@ -33,15 +35,23 @@ public class MemberEntity {
     String userimage;
     @Column(nullable = false,name = "user_grade")
     int usergrade;
-    @Column(nullable = false,name = "user_sm")
-    Boolean usersm;//무조건 숙대생으로 하기로 했으므로 필요없는 필드. 차후에 협의 후 지우기.
+    //무조건 숙대생으로 하기로 했으므로 필요없는 필드. user_sm 필드는 지움
+
     //이메일 인증 여부를 위한 토큰으로 아직 사용 X
     @Column(nullable = false, name = "email_auth")
     Boolean emailAuth;
 
-    Timestamp regdate;
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewEntity> reviews = new ArrayList<ReviewEntity>();
 
-    Timestamp updatedate;
+
+    public void addReview(ReviewEntity review){
+        this.reviews.add(review);
+        // 이부분이 없으면 무한 루프에 걸린다.
+        if (review.getMember() != this) {
+            review.setMember(this);
+        }
+    }
     //  Entity -> DTO
     public MemberDTO toDTO(){
         return MemberDTO.builder()
@@ -52,9 +62,6 @@ public class MemberEntity {
                 .user_store(userstore)
                 .user_image(userimage)
                 .user_grade(usergrade)
-                .user_sm(usersm)
-                .regdate(regdate)
-                .updatedate(updatedate)
                 .emailAuth(emailAuth)
                 .build();
 
