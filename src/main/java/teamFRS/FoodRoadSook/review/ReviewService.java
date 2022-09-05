@@ -2,19 +2,20 @@ package teamFRS.FoodRoadSook.review;
 
 
 import teamFRS.FoodRoadSook.member.MemberDTO;
+import teamFRS.FoodRoadSook.member.MemberEntity;
 import teamFRS.FoodRoadSook.restaurant.RestaurantDTO;
 
 import java.util.List;
 
 public interface ReviewService {
     //가게 정보 저장
-    String Review_insert(ReviewDTO reviewDTO);
+    String Review_insert(ReviewDTO reviewDTO, MemberEntity memberEntity);
 
     //여기서 정보 받아올때 식별자로 쓸 변수 id(자동 고유 번호)
     ReviewDTO Review_select(int id);
 
     //리뷰 정보 변경
-    boolean Review_update(int id, ReviewDTO reviewDTO);
+    boolean Review_update(ReviewDTO reviewDTO);
 
     //리뷰 삭제
     String Review_delete(ReviewDTO reviewDTO);

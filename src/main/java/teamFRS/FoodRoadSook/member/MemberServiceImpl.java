@@ -4,8 +4,10 @@ package teamFRS.FoodRoadSook.member;
 import java.util.Optional;
 import java.util.UUID;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import teamFRS.FoodRoadSook.emailauth.EmailService;
@@ -16,20 +18,13 @@ import teamFRS.FoodRoadSook.exception.NotFoundException;
 @Service
 @Slf4j
 @Transactional
+@RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
     private final EmailService emailService;
     private final RedisUtil redisUtil;
     private final MemberRepository memberRepository;
-
-
-    @Autowired //이걸통해 의존관계주입을 component scan시 자동으로 해준다
-    public MemberServiceImpl(EmailService emailService, RedisUtil redisUtil, MemberRepository memberRepository) {
-        this.emailService = emailService;
-        this.redisUtil = redisUtil;
-        this.memberRepository = memberRepository;
-
-    }
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * 회원 정보 DB에 추가
@@ -44,6 +39,7 @@ public class MemberServiceImpl implements MemberService {
             return "이미존재하는 회원입니다.";
         } else {
             MemberEntity memberEntity = memberDTO.toEntity();
+            memberEntity.encryptPw(bCryptPasswordEncoder.encode(memberDTO.getUser_pw()));
             memberRepository.save(memberEntity);
             return "회원가입 성공";
         }
@@ -91,9 +87,24 @@ public class MemberServiceImpl implements MemberService {
      * @return
      */
     @Override
-    public boolean member_update(int id, MemberDTO memberDTO) {
+    public String member_update(MemberDTO memberDTO) {
         //member_insert 구현한것 처럼 DTO 를 Entity로 바꾸어 구현.
-        return false;
+        Optional<MemberEntity> member =memberRepository.findByUserid(memberDTO.getUser_id());
+        if (member.isPresent()) {
+            MemberEntity memberedit = member.get();
+            memberedit.changepw(memberDTO.getUser_pw());//비번 변경
+            memberedit.changeaddress(memberDTO.getUser_address());//주소 변경
+            //중복된 닉네임이 아닐경우만 바꿀 수 있음.
+            if (memberRepository.findByUsername(memberDTO.getUser_name()).isEmpty())
+                memberedit.changeusername(memberDTO.getUser_name());//닉네임 변경
+            else{
+                return "중복된 닉네임으로 닉네임을 바꾸지 못했습니다.";
+
+            }
+            memberRepository.save(memberedit);
+            return " 회원정보를 업데이트 했습니다.";
+        }
+        return "회원 정보를 불러오는데 실패했습니다.";
     }
     /**
      * 회원 정보 삭제 - 미구현

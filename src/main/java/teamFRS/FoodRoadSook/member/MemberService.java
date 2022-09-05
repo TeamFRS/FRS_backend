@@ -19,7 +19,7 @@ public interface MemberService {
 
 
     //마이페이지에서 회원 정보 변경 저장
-    boolean member_update(int id, MemberDTO memberDTO);
+    String member_update(MemberDTO memberDTO);
 
     //회원 정보 탈퇴
     boolean member_delete(String user_id);

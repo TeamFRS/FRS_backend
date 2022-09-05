@@ -83,4 +83,5 @@ public class ReviewEntity {
                 .build();
 
     }
+    public void changeContent(String content){this.reviewcontent = content;}
 }

@@ -33,7 +33,7 @@ public class ReviewServiceImpl implements ReviewService{
      * @return
      */
     @Override
-    public String Review_insert(ReviewDTO reviewDTO) {
+    public String Review_insert(ReviewDTO reviewDTO, MemberEntity memberEntity) {
         ReviewEntity reviewEntity = reviewDTO.toEntity();
         //유저 설정
         Optional <MemberEntity> member= memberRepository.findById(reviewDTO.getMemeber_id());
@@ -55,18 +55,27 @@ public class ReviewServiceImpl implements ReviewService{
         return review.get().toDTO();
     }
     /**
-     * 미구현@@
-     * 리뷰 업데이트
+     * 리뷰 내용만(Review_content만 변경
      * @return
      */
     @Override
-    public boolean Review_update(int id, ReviewDTO reviewDTO) {
-        return false;
+    public boolean Review_update(ReviewDTO reviewDTO) {
+        Optional<ReviewEntity> review =reviewRepository.findById(reviewDTO.getId());
+        if (review.isPresent()) {
+            ReviewEntity reviewedit = review.get();
+            reviewedit.changeContent(reviewDTO.getReview_content());//리뷰 내용 변경
+            reviewRepository.save(reviewedit);
+        }
+        return true;
     }
     /**
      * 리뷰 정보 삭제
      * @return
      */
+    //주의 본인이 쓴글이 맞을 경우에만 삭제 승인.
+    //주의 reviewRepository에서 뿐만 review와 연관된 Restaurant과 Member의 reviews 에서도 삭제해 줘야할것같은데
+    //이게 객체가 각 필드에서 자동으로 사라질지는 잘 모르겠음.
+    //각 클래스에 deletereview() 구현하면 될 것 같음.
     @Override
     public String Review_delete(ReviewDTO reviewDTO) {
         Optional<ReviewEntity> review =reviewRepository.findById(reviewDTO.getId());
@@ -75,7 +84,7 @@ public class ReviewServiceImpl implements ReviewService{
             return "성공적으로 리뷰를 삭제했습니다.";
         }
         else{
-            return "존재하지않는 가게를 삭제할 수 없습니다.";
+            return "존재하지않는 리뷰를 삭제할 수 없습니다.";
         }
     }
     /**

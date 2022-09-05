@@ -19,15 +19,6 @@ public class MemberController {
 
     }
 
-    /**
-     * 회원정보 가져오기 #DB 체크 용 메서드
-     * @return MemberDTO
-     */
-    //http://localhost:8080/api/member/UserProfile/{실제 유저아이디}
-    @GetMapping("/UserProfile/{user_id}")
-    public MemberDTO UserProfile(@PathVariable("user_id") String user_id) {
-        return memberService.member_select(user_id);
-    }
 
     /**
      * 회원가입
@@ -40,6 +31,34 @@ public class MemberController {
         // DB에 기본정보 insert
         return memberService.member_insert(memberDTO);
     }
+
+    /**
+     * 회원정보 가져오기 #DB 체크 용 메서드
+     * @return MemberDTO
+     */
+    //http://localhost:8080/api/member/UserProfile/{실제 유저아이디}
+    @GetMapping("/UserProfile/{user_id}")
+    public MemberDTO UserProfile(@PathVariable("user_id") String user_id) {
+        return memberService.member_select(user_id);
+    }
+    /**
+     * 회원정보 수정하기
+     * @return Response (회원정보 수정 성공여부)
+     */
+    @PutMapping("/edit-myinfo")
+    public Response update(@RequestBody MemberDTO memberDTO) {
+
+        Response response;
+        try {
+            String message = memberService.member_update(memberDTO);
+            response = new Response(message, "성공적으로 회원 정보를 변환했습니다.", null);
+        } catch (Exception exception) {
+            response = new Response("error", "회원정보 수정에 문제가 발생했습니다.",exception);
+        }
+        return response;
+    }
+
+
 
     /**
      * 이메일(user_id) 인증

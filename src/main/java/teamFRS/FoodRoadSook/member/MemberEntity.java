@@ -70,6 +70,11 @@ public class MemberEntity {
     public void emailVerified(){
         this.emailAuth = true;
     }
+    public void changepw(String pw){this.userpw =pw;}
+    public void changeaddress(String address){this.useraddress=address;}
+    public void changeusername(String username){this.username=username;}
+    public void encryptPw(String userpw){this.userpw = userpw;}
+
 
 
 }

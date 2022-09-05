@@ -1,5 +1,8 @@
 package teamFRS.FoodRoadSook.member;
 
+import lombok.Data;
+
+@Data
 public class Logindata {
     String id;
     String pw;
