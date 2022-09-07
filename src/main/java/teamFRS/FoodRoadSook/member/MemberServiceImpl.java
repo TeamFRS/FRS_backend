@@ -70,9 +70,13 @@ public class MemberServiceImpl implements MemberService {
         }
         else {//비밀번호 일치하는지 확인
             String password = member.get().toDTO().getUser_pw();
+            Boolean emailauth = member.get().toDTO().getEmailAuth();
             if (logindata.getPw().equals(password)) {
-                return " 로그인에 성공하셨습니다.";
-                //맞는다면 세션유지
+                if(emailauth == true)//맞는다면 세션유지
+                    return " 인증된 아이디. 로그인에 성공하셨습니다.";
+                else
+                    return "이메일 인증이 필요합니다.";
+
             }
             else{
                 return "비밀번호가 틀렸습니다";

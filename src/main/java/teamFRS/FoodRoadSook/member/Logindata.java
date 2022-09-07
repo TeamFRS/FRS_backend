@@ -4,6 +4,7 @@ public class Logindata {
     String id;
     String pw;
 
+
     public String getId() {
         return id;
     }
@@ -11,4 +12,5 @@ public class Logindata {
     public String getPw() {
         return pw;
     }
+
 }
